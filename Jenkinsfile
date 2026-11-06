@@ -104,7 +104,8 @@ pipeline {
                         }
                     }
                 }
-
+            }
+        }
 
         stage('Merge Reports') {
             agent any
@@ -113,13 +114,11 @@ pipeline {
                 checkout scm
                 bat 'npm ci'
 
-                // Collect reports from all four shards.
+                // Collect reports from both shards.
                 unstash 'shard1-blob'
                 unstash 'shard2-blob'
-                unstash 'shard3-blob'
-                unstash 'shard4-blob'
 
-                // Merge available Blob reports into HTML.
+                // Merge Blob reports into HTML.
                 bat '''
                     if exist blob-report\\*.zip (
                         npx playwright merge-reports --reporter html blob-report
